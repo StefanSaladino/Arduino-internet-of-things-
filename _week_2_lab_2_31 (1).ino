@@ -67,13 +67,17 @@ digitalWrite(RGBRedPin, LOW); //Turn off RED
 digitalWrite(RGBBluePin, LOW); //Turn off BLUE
 digitalWrite(RGBGreenPin, LOW); //Turn off GREEN
   
+//if-else loop will return the if condition if it is true
+//if condition is not met, the else statement will be returned
+//if elapsed time is more or less than one second long, the monitor will print "seconds" (plural)
+//if elapsed time is between 1000-1999 milliseconds, an integer of 1 will be returned, which requires the singular "second"  
 Serial.print("Elapsed time this loop: ");
 Serial.print((onTime*i*7)/1000);
 if
-(i==1)
-Serial.println(" second");
-else
+(onTime*i*7>1999 || onTime*i*7<999)
 Serial.println(" seconds");
+else
+Serial.println(" second");
 }
  
 
