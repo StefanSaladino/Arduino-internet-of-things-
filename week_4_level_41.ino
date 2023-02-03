@@ -4,7 +4,7 @@
 
 
 
-//C++ apparently returns the size of the array in bites (Fun fact: I did not know this and spent too long trying to figure out why the program thought my array contained 8 elements)
+//C++ apparently returns the size of the array in bytes (Fun fact: I did not know this and spent too long trying to figure out why the program thought my array contained 8 elements)
 //in order for int length to return the appropriate value, I divided the number of bytes by a standard integer length (the variable used in the array)
 //this returned a length of 4, which is what I needed for my for loop to function
 int lightsensor = A1;
