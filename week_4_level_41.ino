@@ -50,7 +50,7 @@ void lightsOn(){
 void loop()
 {
   data = analogRead(lightsensor);//reads the sensor bar input when moving
-  data = map(data, 6, 679, 0, 15);// adjusting the scale to a 100 pt scale. Easier too understand in % terms
+  data = map(data, 6, 679, 0, 15);// adjusting the scale to a 100 pt scale. Easier to understand in % terms
   
   Serial.print("Binary number= ");//will print light value=
   Serial.println(data);//will print the sensor value and create next line
