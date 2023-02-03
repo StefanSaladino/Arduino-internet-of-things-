@@ -5,7 +5,7 @@
 int lightsensor = A1;
 int data = 0;
 int ledPin[]= {13, 12, 8, 7};
-int length = (sizeof(ledPin))/(sizeof(ledPin[0]));
+int length = (sizeof(ledPin))/(sizeof(int);
 
 
 
