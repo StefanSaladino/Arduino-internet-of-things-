@@ -1,0 +1,89 @@
+//C++ code
+//Stefan Saladino
+//Feb. 16/23
+
+int data;
+int RGBRedPin = 9; //The red RGB LED is connected pin 9 of the Arduino.
+int RGBGreenPin = 11; //The green RGB LED is connected pin 10 of the Arduino.
+int RGBBluePin = 10; //The blue RGB LED is connected pin 11 of the Arduino.
+int fadeDelay = 5;//This is the number of milliseconds that it will take between steps
+int rotationPin = A0;
+int button1Pin = 2;
+int count;
+int redValue;
+int blueValue;
+int greenValue;
+  
+void setup() { //The Setup function runs once.
+Serial.begin(9600);    
+pinMode(RGBRedPin, OUTPUT); //Setup red RGB LED pin as an output pin.
+pinMode(RGBGreenPin, OUTPUT); //Setup green RGB LED pin as an output pin.
+pinMode(RGBBluePin, OUTPUT);//Setup blue RGB LED pin as an output pin.
+pinMode(button1Pin, INPUT);
+pinMode(rotationPin, INPUT);
+}
+
+void lightsOut()
+{
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 0);
+}  
+void loop() { //The loop function runs forever.
+  
+  data= analogRead(rotationPin);
+  data= map(data, 0, 1023, 0, 255);
+  //Serial.print("data: ");
+  //Serial.println(data);
+  //{Serial.println(count);
+   //delay(1000);}
+  
+  
+  if (digitalRead(button1Pin)==HIGH){
+    if(count==0){
+      count++;
+    	delay(500);}
+    else if(count==1){
+      count++;
+      Serial.print("R= ");
+      Serial.println(data);
+      redValue=data;
+    delay(500);}
+     else if(count==2){
+      count++;
+      Serial.print("G= ");
+      Serial.println(data);
+      greenValue=data;
+     delay(500);}
+     else if(count==3){
+      count=4;
+      Serial.print("B= ");
+      Serial.println(data);
+      blueValue=data;
+      Serial.println("LOCKED IN!");
+       Serial.println("Your colour:");
+       Serial.print("red value= ");
+       Serial.println(redValue);
+       Serial.print("green value= ");
+       Serial.println(greenValue);
+       Serial.print("blue value= ");
+       Serial.println(blueValue);
+     delay(500);}
+    else if(count==4){
+      count=0;
+    	Serial.println("Reset initiated");
+    	delay(500);}
+  }
+  
+    if (count==1){
+      analogWrite(RGBRedPin, data);}
+    else if (count==2){
+      analogWrite(RGBGreenPin, data);}
+    else if (count==3){
+      analogWrite(RGBBluePin, data);}
+    else if (count==0){
+      lightsOut();}
+    	
+    
+  
+  }
