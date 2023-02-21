@@ -1,0 +1,84 @@
+//C++ code
+//Stefan Saladino
+//Feb. 16/23
+
+int brightness;
+int RGBRedPin = 9; //The red RGB LED is connected pin 9 of the Arduino.
+int RGBGreenPin = 11; //The green RGB LED is connected pin 10 of the Arduino.
+int RGBBluePin = 10; //The blue RGB LED is connected pin 11 of the Arduino.
+int fadeDelay = 5;//This is the number of milliseconds that it will take between steps
+int rotationPin = A0;
+int button1Pin = 2;
+int redValue;
+int blueValue;
+int greenValue;
+char incomingByte;
+  
+void setup() { //The Setup function runs once.
+Serial.begin(9600);    
+pinMode(RGBRedPin, OUTPUT); //Setup red RGB LED pin as an output pin.
+pinMode(RGBGreenPin, OUTPUT); //Setup green RGB LED pin as an output pin.
+pinMode(RGBBluePin, OUTPUT);//Setup blue RGB LED pin as an output pin.
+pinMode(button1Pin, INPUT);
+pinMode(rotationPin, INPUT);
+attachInterrupt(digitalPinToInterrupt(2),buttonPressed,RISING);
+Serial.println(" ");
+Serial.println("Input colour selection");
+Serial.print("Waiting for user input");
+}
+
+void buttonPressed(){
+  	Serial.println(" ");
+       Serial.println("Your colour:");
+  		delay(500);
+       Serial.print("red value= ");
+       Serial.println(redValue);
+       Serial.print("green value= ");
+       Serial.println(greenValue);
+       Serial.print("blue value= ");
+  		Serial.println(blueValue);
+		delay(500);
+  Serial.println("Input R/G/B to alter colour");
+	Serial.print("Waiting for user input");}
+
+void lightsOut()
+{
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 0);
+}  
+void loop() { //The loop function runs forever.
+      while(Serial.available()==0){
+   Serial.print(".");
+    delay(1000);
+  }
+  incomingByte = Serial.read();
+  
+  brightness= analogRead(rotationPin);
+  brightness= map(brightness, 0, 1023, 0, 255);
+  //Serial.print("data: ");
+  //Serial.println(data);
+  
+  switch (incomingByte){
+    case 'R':
+      analogWrite(RGBRedPin, brightness);
+      redValue=brightness;
+      break;
+    
+    case 'G':
+      analogWrite(RGBGreenPin, brightness);
+    	greenValue=brightness;
+    	break;
+    
+    case 'B':
+      analogWrite(RGBBluePin, brightness);
+    	blueValue=brightness;
+    	break;
+    
+    default:
+      Serial.println(" ");
+      Serial.println("Invalid selection.");
+      Serial.println("Try again using R, G, or B.");
+      Serial.println("Waiting for user input");
+  break;}
+}
