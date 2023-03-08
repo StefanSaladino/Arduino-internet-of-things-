@@ -231,14 +231,13 @@ void song1(){
 //code to run second song
 void song2(){
   for (int i = 0; i < length2; i++) {
-    //random light show being passed to my array of functions
-    int myRandom = random(0,4);
-    functions[myRandom]();
-     if (digitalRead(button1Pin) == HIGH)//checks if the button has been pressed
+       if (digitalRead(button1Pin) == HIGH)//checks if the button has been pressed
      {
        break;//exit the loop
      }
-    
+    //random light show being passed to my array of functions
+    int myRandom = random(0,4);
+    functions[myRandom]();
     int duration2 = 1000 / durations2[i];
     tone(5, notes2[i], duration2);
     delay(duration2 * 1.30);
@@ -249,12 +248,12 @@ void song2(){
 //code to run the third song
 void song3(){
     for (int i = 0; i < length3; i++) {
-      int myRandom = random(0,4);
-    functions[myRandom]();
      if (digitalRead(button1Pin) == HIGH)//checks if the button has been pressed
      {
        break;//exit the loop
      }
+    int myRandom = random(0,4);
+    functions[myRandom]();
     int duration3 = 1000 / durations3[i];
     tone(5, notes3[i], duration3);
     delay(duration3 * 1.30);
