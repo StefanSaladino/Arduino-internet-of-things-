@@ -31,7 +31,6 @@ pinMode(buttonYesPin, INPUT);
 void loop(){
 //every loop will run until the button is pressed. Pressing the button makes a selection and starts the next loop  
  int count=0;
- Serial.println(count);
   
   //initial setup
   while(count==0){
@@ -51,7 +50,6 @@ void loop(){
       count=1;
     }
   }
-   Serial.println(count);
 
 //question will keep going until user makes a selection  
 while(count==1){
