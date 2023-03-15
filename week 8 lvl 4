@@ -1,0 +1,225 @@
+// C++ code
+// Stefan Saladino
+// March 16, 2023
+#include <LiquidCrystal.h>
+//Initialise the Serial LCD.
+LiquidCrystal lcd(12,11,5,4,3,7); //These pin numbers are hard coded in on the serial backpack board.
+int buttonNoPin = 8;
+int buttonYesPin = 2;
+//The array of questions to be looped through
+String questions[]= {"Drink 2L of water?", "Exercise regularly?", "Sleep 8h/night?", "Eat healthy?", "Have a pet?"};
+//a 1 will be passed to yes array and 0 to no array if yes is answered
+//and vice versa
+int noArray[5]={};
+int yesArray[5]={};
+//getting the length of the arrays for the for loop iterations
+int noArrayLength= sizeof(noArray)/sizeof(noArray[0]);
+int yesArrayLength= sizeof(yesArray)/sizeof(yesArray[0]);
+//these variables will be used to tally total amount of yes and no answers
+int sumYes=0;
+int sumNo=0;
+
+void setup()
+{
+Serial.begin(9600);
+lcd.begin (16,2); //Initialize the LCD.
+pinMode(buttonNoPin, INPUT);
+pinMode(buttonYesPin, INPUT);
+}
+
+
+void loop(){
+//every loop will run until the button is pressed. Pressing the button makes a selection and starts the next loop  
+ int count=0;
+ Serial.println(count);
+  
+  //initial setup
+  while(count==0){
+  	lcd.clear();
+	lcd.setCursor(0, 0);
+  	lcd.print("Left button=yes");
+    lcd.setCursor(0,1);
+  	lcd.print("Right button=no");
+	delay(500);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Press any button");
+    lcd.setCursor(0,1);
+    lcd.print("to start");
+    delay(500);
+    if(digitalRead(buttonNoPin)==HIGH||digitalRead(buttonYesPin)==HIGH){
+      count=1;
+    }
+  }
+   Serial.println(count);
+
+//question will keep going until user makes a selection  
+while(count==1){
+  lcd.clear();
+  lcd.print(questions[0]);
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");
+  delay(2000);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("f water per day?");
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");
+  delay(2000);
+  if(digitalRead(buttonNoPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No");
+    delay(500);
+    //when a button is pressed, the corresponding values are stored to the appropriate array
+    yesArray[0]=0;
+    noArray[0]=1;
+  	}
+  else if(digitalRead(buttonYesPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yes");
+    delay(500);
+    yesArray[0]=1;
+    noArray[0]=0;
+    }
+}
+while(count==2){
+  lcd.clear();
+  lcd.print(questions[1]);
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");
+  delay(500);
+  lcd.setCursor(0,0);
+  lcd.print("rcise regularly?");
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");
+  delay(500);
+  
+  if(digitalRead(buttonNoPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No");
+    delay(500);
+    yesArray[1]=0;
+    noArray[1]=1;
+  	}
+  else if(digitalRead(buttonYesPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yes");
+    delay(500);
+    yesArray[1]=1;
+    noArray[1]=0;
+    }
+}
+  
+  while(count==3){
+  lcd.clear();
+  lcd.setCursor(0,0);  
+  lcd.print(questions[2]);
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");  
+  delay(500);
+  if(digitalRead(buttonNoPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No");
+    delay(500);
+    yesArray[2]=0;
+    noArray[2]=1;
+  	}
+  else if(digitalRead(buttonYesPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yes");
+    delay(500);
+    yesArray[2]=1;
+    noArray[2]=0;
+    }
+}
+  
+  while(count==4){
+  lcd.clear();
+  lcd.setCursor(0,0);  
+  lcd.print(questions[3]);
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");  
+  delay(500);
+  if(digitalRead(buttonNoPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No");
+    delay(500);
+    yesArray[3]=0;
+    noArray[3]=1;
+  	}
+  else if(digitalRead(buttonYesPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yes");
+    delay(500);
+    yesArray[3]=1;
+    noArray[3]=0;
+    }
+}
+  while(count==5){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(questions[4]);
+  lcd.setCursor(0,1);
+  lcd.print("<-Yes       No->");
+  delay(500);
+  if(digitalRead(buttonNoPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No");
+    delay(500);
+    yesArray[4]=0;
+    noArray[4]=1;
+  	}
+  else if(digitalRead(buttonYesPin)==HIGH){
+    count++;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Yes");
+    delay(500);
+    yesArray[4]=1;
+    noArray[4]=0;
+    }
+}
+//calculating final results
+for(int i=0; i<noArrayLength; i++){
+    sumNo=sumNo+noArray[i];}
+  
+for(int i=0; i<yesArrayLength; i++){
+     sumYes=sumYes+yesArray[i];}
+  
+  //printing the final results
+  while(count==6){  
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("No amount= ");
+    lcd.setCursor(12, 0);
+    lcd.print(sumNo);
+    lcd.setCursor(0,1);
+    lcd.print("Yes amount= ");
+    lcd.setCursor(13,1);
+    lcd.print(sumYes);
+    delay(500);
+    //main menu will run if button is pressed again
+    if(digitalRead(buttonNoPin)==HIGH||digitalRead(buttonYesPin)==HIGH){
+      count=0;
+    }
+  }
+  
+}
