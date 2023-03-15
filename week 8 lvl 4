@@ -219,6 +219,8 @@ for(int i=0; i<yesArrayLength; i++){
     //main menu will run if button is pressed again
     if(digitalRead(buttonNoPin)==HIGH||digitalRead(buttonYesPin)==HIGH){
       count=0;
+      sumYes=0;
+      sumNo=0;
     }
   }
   
