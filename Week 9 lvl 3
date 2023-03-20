@@ -1,0 +1,172 @@
+// C++ code
+// Stefan Saladino
+// March 16/23
+
+#include <IRremote.h>
+#define IR_RECEIVE_PIN 11
+#define pwr 0
+#define btn1 16
+#define btn2 17
+#define btn3 18
+#define btn4 20
+#define btn5 21
+
+int value;
+int blueLED= 12;
+int redLED= 13;
+bool blueLight;
+int menu=0;
+bool redLight;
+
+void blueOn(){
+  digitalWrite(blueLED, HIGH);
+}
+void redOn(){
+  digitalWrite(redLED, HIGH);
+}
+void blueOff(){
+  digitalWrite(blueLED, LOW);
+}
+void redOff(){
+  digitalWrite(redLED, LOW);
+}
+void blinkBlue(){
+  blueOn();
+  delay(500);
+  blueOff();
+  delay(250);
+}
+void blinkRed(){
+  redOn();
+  delay(500);
+  redOff();
+  delay(250);
+}
+void blinkRedAndBlue(){
+  redOn();
+  blueOn();
+  delay(500);
+  blueOff();
+  redOff();
+  delay(350);
+}
+
+void setup() {
+Serial.begin(9600);
+IrReceiver.begin(IR_RECEIVE_PIN);
+pinMode(blueLED, OUTPUT);
+pinMode(redLED, OUTPUT);
+}
+
+void loop() {
+
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+  Serial.println(value);
+  if (value==pwr){
+    if(menu==0){
+    Serial.println("1- blue menu");
+    Serial.println("2- red menu");
+    Serial.println("3- combo menu");
+    Serial.println("  ");
+    menu=1;}
+    }
+}
+  
+while (menu==1){  
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+  Serial.println(value);  
+    if(value==btn1){
+      menu=2;
+    Serial.println("Blue menu selected");}
+  else if(value==btn2){
+      menu=3;
+    Serial.println("Red menu selected");}
+  else if(value==btn3){
+    menu=4;
+    Serial.println("Combo menu selected");
+  }
+  else if(value==pwr){
+      Serial.println("Goodbye");
+      menu=0;
+  break;}
+  }
+}
+  
+while(menu==2){  
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+Serial.println(value);   
+  if (value==btn1){
+    blueLight=!blueLight;
+      digitalWrite(blueLED, blueLight);
+      }
+  else if (value==btn2){
+    Serial.println("red light menu activated");
+    menu=3;
+  }
+  else if (value==btn3){
+    Serial.println("combination menu activated");
+    menu=4;
+  }
+  else if(value==pwr){
+      Serial.println("Goodbye");
+      menu=0;
+  break;}
+  }
+}
+  
+  while(menu==3){  
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+Serial.println(value);   
+  if (value==btn2){
+    redLight=!redLight;
+      digitalWrite(redLED, redLight);
+      }
+  else if (value==btn1){
+    Serial.println("blue light menu activated");
+    menu=2;
+  }
+  else if(value==btn3){
+    Serial.println("combination menu activated");
+    menu=4;
+  }
+  else if(value==pwr){
+      Serial.println("Goodbye");
+      menu=0;
+  break;}
+  }
+}
+  
+  while(menu==4){  
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+Serial.println(value);   
+  if (value==btn3){
+    redLight=!redLight;
+      digitalWrite(redLED, redLight);
+    blueLight=!blueLight;
+      digitalWrite(blueLED, blueLight);
+      }
+  else if (value==btn1){
+    Serial.println("blue light menu activated");
+    menu=2;
+  }
+  else if(value==btn2){
+    Serial.println("red light menu activated");
+    menu=3;
+  }
+  else if(value==pwr){
+      Serial.println("Goodbye");
+      menu=0;
+  break;}
+  }
+}
+}
