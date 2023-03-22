@@ -1,0 +1,505 @@
+// C++ code
+// Stefan Saladino
+// March 16/23
+
+#include <IRremote.h>
+#define IR_RECEIVE_PIN 11
+#define pwr 0
+#define btn1 16
+#define btn2 17
+#define btn3 18
+#define btn4 20
+#define btn5 21
+#define btn6 22
+#define btn7 24
+#define btn8 25
+
+int value;
+int RGBRedPin = 6; 
+int RGBGreenPin = 10; 
+int RGBBluePin = 9;
+int blueLED= 12;
+int redLED= 13;
+bool blueLight;
+int menu=0;
+bool redLight;
+int data;
+bool greenPin= false;
+bool redPin=false;
+bool randomPin=false;
+bool fuschiaPin=false;
+bool blueWhite=false;
+bool turquoisePin=false;
+int forbiddenButton= 2;
+bool cops=false;
+
+//method to print main menu
+void printMenu(){
+Serial.println("Select an option");  
+    Serial.println("1- green");
+    Serial.println("2- red");
+    Serial.println("3- fuschia");
+    Serial.println("4- blue/white");
+    Serial.println("5- turquoise");
+    Serial.println("6- random colour");
+    Serial.println("DO NOT PRESS THE BUTTON");
+    menu=1;
+}
+
+//various methods to control the LED
+void turquoise(){
+  analogWrite(RGBRedPin, 48);
+  analogWrite(RGBGreenPin, 213);
+  analogWrite(RGBBluePin, 200);
+}
+
+void blue(){
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 255);
+}
+
+void red(){
+  analogWrite(RGBRedPin, 255);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 0);
+}
+
+void green(){
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 255);
+  analogWrite(RGBBluePin, 0);
+}
+
+void fuschia(){
+  analogWrite(RGBRedPin, 255);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 255);
+}
+
+void white(){
+  analogWrite(RGBRedPin, 255);
+  analogWrite(RGBGreenPin, 255);
+  analogWrite(RGBBluePin, 255);
+}
+
+//this will create a random colour every time it's called
+void randomColour(){
+int randomRed= random(0, 256);
+int randomBlue= random(0, 256);
+int randomGreen= random(0, 256);  
+  analogWrite(RGBRedPin, randomRed);
+  analogWrite(RGBGreenPin, randomGreen);
+  analogWrite(RGBBluePin, randomBlue); 
+}
+
+//this is called when the button is pressed. A mini game will be activated
+void siren(){
+  if(cops){
+  Serial.println("Oh no you pressed the button, now the police are coming! Press the button again to lose them.");
+  }
+  while(cops){
+  analogWrite(RGBRedPin, 255);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 0);
+  delay(250);
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 255);
+  delay(250);
+  if(digitalRead(forbiddenButton)==HIGH){
+    int randomCops= random(0, 2);
+    Serial.println(randomCops);
+    if(randomCops==0){
+    Serial.println("They're still on you, try again!");  
+    continue;}
+    else if(randomCops==1){               
+    Serial.println("You lost the cops but DO. NOT. PRESS. THE. BUTTON.");
+    ledOff();
+    delay(1000);
+    menu=0;
+    printMenu();
+      break;}
+    }
+}
+}
+  
+
+void ledOff(){
+  analogWrite(RGBRedPin, 0);
+  analogWrite(RGBGreenPin, 0);
+  analogWrite(RGBBluePin, 0);
+}
+
+void setup() {
+Serial.begin(9600);
+IrReceiver.begin(IR_RECEIVE_PIN);
+pinMode(blueLED, OUTPUT);
+pinMode(redLED, OUTPUT);
+pinMode(RGBRedPin, OUTPUT); //Setup red RGB LED pin as an output pin.
+pinMode(RGBGreenPin, OUTPUT); //Setup green RGB LED pin as an output pin.
+pinMode(RGBBluePin, OUTPUT);//Setup blue RGB LED pin as an output pin.  
+}
+
+void loop() {
+data= map(data, 0, 1023, 0, 255);  
+  if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+
+//pressing the power button calls the main menu if the menu is 0  
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+  Serial.println(value);
+  if (value==pwr){
+    if(menu==0){
+    printMenu();
+    delay(1000);
+    }
+}
+}
+
+//menu 1 calls the main menu, presenting the user their options  
+while (menu==1){
+if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+if (IrReceiver.decode()) {
+IrReceiver.resume();
+value = IrReceiver.decodedIRData.command;
+  Serial.println(value);  
+  if(value==btn1){
+      menu=2;
+    Serial.println("Green selected");}
+  else if(value==btn2){
+      menu=3;
+    Serial.println("Red selected");}
+  else if(value==btn3){
+    menu=4;
+    Serial.println("fuschia selected");
+  }
+  else if(value==btn4){
+    menu=5;
+    Serial.println("blue and white selected");
+  }
+  else if(value==btn5){
+    menu=6;
+    Serial.println("turquoise selected");
+  }
+  else if(value==btn6){
+      menu=7;
+      Serial.println("random colour selected");
+    }
+  else if(value==pwr){
+      Serial.println("Goodbye");
+      menu=0;
+  break;}
+  }
+}
+
+
+//each menu that follows has a unique colour (or combination of colours) that
+//can be activated by pressing the button correpsonding to that menu
+//you can also transfer to other menus  
+  
+while(menu==2){
+  if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+  
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);   
+      if(value==btn1){
+        if (!greenPin){
+        	analogWrite(RGBGreenPin, 255);
+        	greenPin=true;}
+        else if(greenPin){
+          	analogWrite(RGBGreenPin, 0);
+          	greenPin= false;}
+        }
+      else if (value==btn2){
+        ledOff();
+        menu=3;
+      	Serial.println("Red selected");}
+      else if (value==btn3){
+        ledOff();
+        menu=4;
+      	Serial.println("Fuschia selected");}
+      else if(value==btn4){
+        ledOff();
+    	menu=5;
+    	Serial.println("blue and white selected");
+  		}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+  }
+      else if(value==btn6){
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+    }
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+      
+  }
+  }
+  
+  
+while(menu==3){ 
+  if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+  
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);  
+      if(value==btn2){
+        if (!redPin){
+        	analogWrite(RGBRedPin, 255);
+        	redPin=true;}
+        else if(redPin){
+          	analogWrite(RGBRedPin, 0);
+          	redPin= false;}
+        } 
+      else if (value==btn1){
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");}
+      else if (value==btn3){
+        ledOff();
+        menu=4;
+      	Serial.println("Fuschia selected");}
+      else if(value==btn4){
+        ledOff();
+    	menu=5;
+    	Serial.println("blue and white selected");
+  		}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+  }
+      else if(value==btn6){
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+    }
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+  }
+} 
+  while(menu==4){
+    if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+    
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);  
+      if(value==btn3){
+        if (!fuschiaPin){
+        	fuschia();
+        	fuschiaPin=true;}
+        else if(fuschiaPin){
+          	ledOff();
+          	fuschiaPin= false;}
+        } 
+      else if (value==btn1){
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");}
+      else if (value==btn2){
+        ledOff();
+        menu=3;
+      	Serial.println("Red selected");}
+             else if(value==btn4){
+        ledOff();
+    	menu=5;
+    	Serial.println("blue and white selected");
+  		}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+  }
+      else if(value==btn6){
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+    }
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+  }
+}
+  
+  while(menu==5){
+    if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+    
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);
+      //blue and white will continue to flash until the while loop
+      //is broken
+      if(value==btn4){
+        if (!blueWhite){
+          blueWhite=true;
+          while(blueWhite){
+        	blue();
+          	delay(500);
+            white();
+            delay(500);      
+     if (IrReceiver.decode()) {
+			IrReceiver.resume();
+			value = IrReceiver.decodedIRData.command;
+			Serial.println(value);  
+     if(value==btn4){
+          	ledOff();
+           blueWhite=false;
+        	break;}   
+     else if (value==btn1){
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");
+        break;}
+      else if (value==btn3){
+        ledOff();
+        menu=4;
+      	Serial.println("Fuschia selected");
+      	break;}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+        break;
+  }
+      else if(value==btn6){
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+        break;
+    }
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+    }
+  }
+ }
+ }
+ }
+ }
+  
+  while(menu==6){
+    if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);  
+      if(value==btn5){
+        if (!turquoisePin){
+        	turquoise();
+        	turquoisePin=true;}
+        else if(turquoisePin){
+          	ledOff();
+          	turquoisePin= false;}
+        } 
+      else if (value==btn1){
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");}
+      else if (value==btn2){
+        ledOff();
+        menu=3;
+      	Serial.println("Red selected");}
+      else if (value==btn3){
+        ledOff();
+        menu=4;
+      	Serial.println("Fuschia selected");}
+      else if(value==btn4){
+        ledOff();
+    	menu=5;
+    	Serial.println("blue and white selected");
+  		}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+  }
+      else if(value==btn6){
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+    }
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+  }
+}  
+ 
+while(menu==7){
+  if(digitalRead(forbiddenButton)==HIGH){
+    cops=!cops;
+    siren();}
+	if (IrReceiver.decode()) {
+	IrReceiver.resume();
+	value = IrReceiver.decodedIRData.command;
+	Serial.println(value);   
+	if(value==btn6){
+        if (!randomPin){
+        	randomColour();
+        	randomPin=true;}
+        else if(randomPin){
+          	ledOff();
+          	randomPin= false;}
+        } 
+      else if (value==btn1){
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");}
+      else if (value==btn2){
+        ledOff();
+        menu=3;
+      	Serial.println("Red selected");}
+      else if (value==btn3){
+        ledOff();
+        menu=4;
+        Serial.println("fuschia selected");}
+            else if(value==btn4){
+        ledOff();
+    	menu=5;
+    	Serial.println("blue and white selected");
+  		}
+  	  else if(value==btn5){
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");}
+  	  else if(value==pwr){
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
+  }
