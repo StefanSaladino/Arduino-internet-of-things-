@@ -18,11 +18,7 @@ int value;
 int RGBRedPin = 6; 
 int RGBGreenPin = 10; 
 int RGBBluePin = 9;
-int blueLED= 12;
-int redLED= 13;
-bool blueLight;
 int menu=0;
-bool redLight;
 int data;
 bool greenPin= false;
 bool redPin=false;
@@ -134,8 +130,6 @@ void ledOff(){
 void setup() {
 Serial.begin(9600);
 IrReceiver.begin(IR_RECEIVE_PIN);
-pinMode(blueLED, OUTPUT);
-pinMode(redLED, OUTPUT);
 pinMode(RGBRedPin, OUTPUT); //Setup red RGB LED pin as an output pin.
 pinMode(RGBGreenPin, OUTPUT); //Setup green RGB LED pin as an output pin.
 pinMode(RGBBluePin, OUTPUT);//Setup blue RGB LED pin as an output pin.  
