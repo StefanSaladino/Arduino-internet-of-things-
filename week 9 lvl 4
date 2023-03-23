@@ -1,24 +1,12 @@
-// C++ code
-// Stefan Saladino
-// March 16/23
-
-#include <IRremote.h>
-#define IR_RECEIVE_PIN 11
-#define pwr 0
-#define btn1 16
-#define btn2 17
-#define btn3 18
-#define btn4 20
-#define btn5 21
-#define btn6 22
-#define btn7 24
-#define btn8 25
-
 int value;
 int RGBRedPin = 6; 
 int RGBGreenPin = 10; 
 int RGBBluePin = 9;
+int blueLED= 12;
+int redLED= 13;
+bool blueLight;
 int menu=0;
+bool redLight;
 int data;
 bool greenPin= false;
 bool redPin=false;
@@ -130,6 +118,8 @@ void ledOff(){
 void setup() {
 Serial.begin(9600);
 IrReceiver.begin(IR_RECEIVE_PIN);
+pinMode(blueLED, OUTPUT);
+pinMode(redLED, OUTPUT);
 pinMode(RGBRedPin, OUTPUT); //Setup red RGB LED pin as an output pin.
 pinMode(RGBGreenPin, OUTPUT); //Setup green RGB LED pin as an output pin.
 pinMode(RGBBluePin, OUTPUT);//Setup blue RGB LED pin as an output pin.  
@@ -241,8 +231,7 @@ while(menu==2){
     	ledOff();
       	Serial.println("Goodbye");
       	menu=0;
-  		break;}
-      
+  		break;}   
   }
   }
   
@@ -319,7 +308,7 @@ while(menu==3){
         ledOff();
         menu=3;
       	Serial.println("Red selected");}
-             else if(value==btn4){
+      else if(value==btn4){
         ledOff();
     	menu=5;
     	Serial.println("blue and white selected");
@@ -346,6 +335,41 @@ while(menu==3){
     if(digitalRead(forbiddenButton)==HIGH){
     cops=!cops;
     siren();}
+    if (value==btn1){
+       blueWhite=false;
+        ledOff();
+        menu=2;
+      	Serial.println("Green selected");
+        break;}
+       else if (value==btn2){
+       blueWhite=false;
+       ledOff();}
+      else if (value==btn3){
+        blueWhite=false;
+        ledOff();
+        menu=4;
+      	Serial.println("Fuschia selected");
+      	break;}
+  	  else if(value==btn5){
+        blueWhite=false;
+    	ledOff();
+   	 	menu=6;
+    	Serial.println("turquoise selected");
+        break;
+  }
+      else if(value==btn6){
+        blueWhite=false;
+      	ledOff();
+      	menu=7;
+      	Serial.println("random colour selected");
+        break;
+    }
+  	  else if(value==pwr){
+        blueWhite=false;
+    	ledOff();
+      	Serial.println("Goodbye");
+      	menu=0;
+  		break;}
     
 	if (IrReceiver.decode()) {
 	IrReceiver.resume();
@@ -354,8 +378,9 @@ while(menu==3){
       //blue and white will continue to flash until the while loop
       //is broken
       if(value==btn4){
-        if (!blueWhite){
-          blueWhite=true;
+        blueWhite=!blueWhite;
+        
+    if (blueWhite){
           while(blueWhite){
         	blue();
           	delay(500);
@@ -366,42 +391,18 @@ while(menu==3){
 			value = IrReceiver.decodedIRData.command;
 			Serial.println(value);  
      if(value==btn4){
+       		blueWhite=false;
           	ledOff();
-           blueWhite=false;
-        	break;}   
-     else if (value==btn1){
-        ledOff();
-        menu=2;
-      	Serial.println("Green selected");
-        break;}
-      else if (value==btn3){
-        ledOff();
-        menu=4;
-      	Serial.println("Fuschia selected");
-      	break;}
-  	  else if(value==btn5){
-    	ledOff();
-   	 	menu=6;
-    	Serial.println("turquoise selected");
-        break;
-  }
-      else if(value==btn6){
-      	ledOff();
-      	menu=7;
-      	Serial.println("random colour selected");
-        break;
-    }
-  	  else if(value==pwr){
-    	ledOff();
-      	Serial.println("Goodbye");
-      	menu=0;
-  		break;}
+        	}   
+     
     }
   }
  }
  }
  }
- }
+    
+  }
+ 
   
   while(menu==6){
     if(digitalRead(forbiddenButton)==HIGH){
@@ -497,3 +498,5 @@ while(menu==7){
       	menu=0;
   		break;}
   }
+}
+}
