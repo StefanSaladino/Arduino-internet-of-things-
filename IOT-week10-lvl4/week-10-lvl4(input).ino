@@ -25,29 +25,13 @@ if (digitalRead(btn1)==HIGH){//check to see if button one is pressed
   else if(data>=4){//the following will all be executed if the button is pressed 
   //data drops by 1 with a delay of .5 seconds
   //the colour will change accordingly with the positions of the servo (this can be seen in arduino 2 code)
-  data=3;
-  	Wire.beginTransmission(2);
-    Wire.write(data);      
-    Wire.endTransmission();   
-    delay(500);
-    
-  data=2;
+     while (data>0){
+      data--;
   	Wire.beginTransmission(2);
     Wire.write(data);      
     Wire.endTransmission();    
     delay(500);
-    
-  data=1;
-  	Wire.beginTransmission(2);
-    Wire.write(data);      
-    Wire.endTransmission();   
-    delay(500);  
-    
-  data=0;
-  	Wire.beginTransmission(2); 
-    Wire.write(data);      
-    Wire.endTransmission();  
-    delay(500);
+    }
   }  
   }  
 
@@ -61,31 +45,14 @@ else if (digitalRead(btn2)==HIGH){
     Wire.endTransmission();    
     delay(500);
   }
-  
   else if(data==0){
-  data=1;
-  	Wire.beginTransmission(2);
-    Wire.write(data);      
-    Wire.endTransmission();  
-    delay(500);
-    
-  data=2;
-  	Wire.beginTransmission(2);
-    Wire.write(data);      
-    Wire.endTransmission();  
-    delay(500);
-    
-  data=3;
+    while (data<4){
+      data++;
   	Wire.beginTransmission(2);
     Wire.write(data);      
     Wire.endTransmission();    
-    delay(500);  
-    
-  data=4;
-  	Wire.beginTransmission(2);
-    Wire.write(data);      
-    Wire.endTransmission(); 
     delay(500);
+    }
   }  
 }  
 }
