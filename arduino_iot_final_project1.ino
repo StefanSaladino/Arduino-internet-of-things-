@@ -292,6 +292,7 @@ void descendingTone(){
  	delay(500); 
 }
 
+//chatGPT assisted with this function
 //elapsed time function will determine elapsed time since function was called 
 unsigned long elapsedTime() {
   unsigned long currentTime = millis();// taking current run time
