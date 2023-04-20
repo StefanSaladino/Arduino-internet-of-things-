@@ -135,7 +135,7 @@ void loop() {
   }
   delay(500);
   int randomLed = random(0, 3); // generate a random number between 0 and 2
-  
+  Serial.println(randomLed);
     while (level>0 && score<10) { // while the time limit hasn't been reached
       digitalWrite(leds[randomLed], HIGH); // turn on LED
       if (digitalRead(buttons[randomLed]) == HIGH) {// if correct button is pressed
@@ -159,12 +159,14 @@ void loop() {
         break; // exit the while loop
       }
       }
-      else if (digitalRead(buttons[!randomLed]) == HIGH) {// if wrong button is pressed
+      for (int j=0; j<3; j++){
+        if(digitalRead(buttons[j]) == HIGH && digitalRead(buttons[randomLed])==LOW){ // if wrong button is pressed
         flashRed();
         descendingTone();
         Serial.println("Wrong button! Game Over!"); // print "Game Over!" to the serial monitor
         gameOver();
       }
+    }
     }
     
   
@@ -292,7 +294,7 @@ void descendingTone(){
  	delay(500); 
 }
 
-//chatGPT assisted with this function
+//ChatGPT and arduino library consulted for this method
 //elapsed time function will determine elapsed time since function was called 
 unsigned long elapsedTime() {
   unsigned long currentTime = millis();// taking current run time
